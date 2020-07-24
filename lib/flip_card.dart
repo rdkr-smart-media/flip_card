@@ -77,13 +77,13 @@ class FlipCard extends StatefulWidget {
 
   const FlipCard(
       {Key key,
-      @required this.front,
-      @required this.back,
-      this.speed = 500,
-      this.onFlip,
-      this.onFlipDone,
-      this.direction = FlipDirection.HORIZONTAL,
-      this.flipOnTouch = true})
+        @required this.front,
+        @required this.back,
+        this.speed = 500,
+        this.onFlip,
+        this.onFlipDone,
+        this.direction = FlipDirection.HORIZONTAL,
+        this.flipOnTouch = true})
       : super(key: key);
 
   @override
@@ -194,5 +194,28 @@ class FlipCardState extends State<FlipCard>
   void dispose() {
     controller.dispose();
     super.dispose();
+  }
+}
+
+class FlipCardController {
+  GlobalKey<FlipCardState> key;
+
+  FlipCardController({@required this.key});
+
+  void setFlipProgress(double progress) {
+    key.currentState.controller.animateTo(progress, duration: Duration(milliseconds: 0), curve: Curves.linear);
+    if (progress == 0) {
+      key.currentState.isFront = true;
+    } else if (progress == 1) {
+      key.currentState.isFront = false;
+    }
+  }
+
+  void forwardFrom(double progress) {
+    key.currentState.controller.forward(from: progress);
+  }
+
+  void reverseFrom(double progress) {
+    key.currentState.controller.reverse(from: progress);
   }
 }
